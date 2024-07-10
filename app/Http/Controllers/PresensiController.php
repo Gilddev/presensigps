@@ -25,12 +25,13 @@ class PresensiController extends Controller
 
         $nik = Auth::guard('karyawan')->user()->nik;
         $tgl_presensi = date("y-m-d");
+        $dinas = $request -> dinas;
         $jam = date("H:i:s");
         $lok_kantor = DB::table('konfigurasi_lokasi') -> where('id', 1) -> first();
         $lok = explode(",", $lok_kantor -> lokasi_kantor);
         $latitudekantor = $lok[0];
         $longitudekantor = $lok[1];
-        $lokasi = $request->lokasi;
+        $lokasi = $request -> lokasi;
         $lokasiuser = explode(",", $lokasi);
         $latitudeuser = $lokasiuser[0];
         $longitudeuser = $lokasiuser[1];
@@ -74,12 +75,14 @@ class PresensiController extends Controller
                 $data = [
                     'nik' => $nik,
                     'tgl_presensi' => $tgl_presensi,
+                    'dinas' => $dinas,
                     'jam_in' => $jam,
                     'foto_in' => $fileName,
                     'lokasi_in' => $lokasi
                 ];
                 $simpan = DB::table('presensi')->insert($data);
                 if($simpan){
+                    //dd($dinas);
                     echo ("success|Terimakasih, Selamat Bekerja|in");
                     Storage::put($file, $image_base64);
                 }else{

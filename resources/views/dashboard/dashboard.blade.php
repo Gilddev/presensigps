@@ -1,7 +1,23 @@
 @extends('layouts.presensi')
 @section('content')
 
+<style>
+    .logout{
+        position: absolute;
+        color: white;
+        font-size: 30px;
+        text-decoration: none;
+        right: 8px;
+    }
+    .logout:hover{
+        color: white;
+    }
+</style>
+
 <div class="section" id="user-section">
+    <a href="/proseslogout" class="logout">
+        <ion-icon name="log-out-outline"></ion-icon>
+    </a>
             <div id="user-detail">
                 <div class="avatar">
                     @if (!empty(Auth::guard('karyawan') -> user() -> foto))
@@ -38,7 +54,7 @@
                                 <span class="text-center">Profil</span>
                             </div>
                         </div>
-                        <div class="item-menu text-center">
+                        <!-- <div class="item-menu text-center">
                             <div class="menu-icon">
                                 <a href="" class="danger" style="font-size: 40px;">
                                     <ion-icon name="calendar-number"></ion-icon>
@@ -47,7 +63,7 @@
                             <div class="menu-name">
                                 <span class="text-center">Cuti</span>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="item-menu text-center">
                             <div class="menu-icon">
                                 <a href="/presensi/histori" class="warning" style="font-size: 40px;">

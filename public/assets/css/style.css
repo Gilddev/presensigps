@@ -5189,8 +5189,9 @@ textarea,
 }
 
 .login-form .form-image {
+  margin-top: 15px;
   width: 100%;
-  max-width: 200px;
+  max-width: 150px;
   height: auto;
 }
 
@@ -7996,7 +7997,8 @@ body.dark-mode-active .cart-item .cart-item-footer {
 
 #user-section {
   height: 180px;
-  background-color: #092c9f;
+  background-color: #1E8449;
+  /* background-color: #092c9f; */
   padding: 20px;
 }
 

@@ -31,6 +31,10 @@ class RuanganController extends Controller
             'nama_ruangan' => $nama_ruangan
         ];
 
+        $cek = DB::table('ruangan') -> where('kode_ruangan', $kode_ruangan) -> count();
+        if($cek > 0){
+            return Redirect::back() -> with(['success' => 'Data Dengan Kode ' . $kode_ruangan . ' Sudah Ada']);
+        }
         $simpan = DB::table('ruangan') -> insert($data);
         if($simpan){
             return Redirect::back() -> with(['success' => 'Data Berhasil Disimpan']);

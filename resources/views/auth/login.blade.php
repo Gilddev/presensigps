@@ -31,11 +31,11 @@
 
         <div class="login-form mt-1">
             <div class="section">
-                <img src="{{asset('assets/img/login/login-image.jpg')}}" alt="image" class="form-image">
+                <img src="{{asset('assets/img/login/login-image.png')}}" alt="image" class="form-image">
             </div>
             <div class="section mt-1">
-                <h1>Login Page</h1>
-                <h4>Isi form di bawah untuk login</h4>
+                <h2>Absensi Online</h2>
+                <h4>Rumah Sakit Sitti Khadijah Gorontalo</h4>
             </div>
             <div class="section mt-1 mb-5">
                 @php
@@ -65,16 +65,30 @@
                             </i>
                         </div>
                     </div>
+                    <div align="left">
+                        <input type="checkbox" onclick="showHide()"> Tampilkan Password
+                    </div>
 
-                    <div class="form-links mt-2">
+                    <script>
+                        function showHide() {
+                        var inputan = document.getElementById("password");
+                            if (inputan.type === "password") {
+                                inputan.type = "text";
+                            } else {
+                                inputan.type = "password";
+                            }
+                        } 
+                    </script>
+
+                    <!-- <div class="form-links mt-2">
                         <div>
                             <a href="page-register.html">Register Now</a>
                         </div>
                         <div><a href="page-forgot-password.html" class="text-muted">Forgot Password?</a></div>
-                    </div>
+                    </div> -->
 
                     <div class="form-button-group">
-                        <button type="submit" class="btn btn-primary btn-block btn-lg">Log in</button>
+                        <button type="submit" class="btn btn-success btn-block btn-lg">Log in</button>
                     </div>
 
                 </form>

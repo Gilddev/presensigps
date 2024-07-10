@@ -58,7 +58,7 @@
                                         <div class="col-4">
                                             <div class="form-group">
                                                 <select name="kode_ruangan" id="kode_ruangan" class="form-select">
-                                                    <option value="">Ruangan</option>    
+                                                    <option value="Ruangan">Ruangan</option>    
                                                     @foreach ($ruangan as $d)
                                                         <option {{ Request('kode_ruangan') == $d -> kode_ruangan ? 'selected' : ''}} value="{{ $d -> kode_ruangan }}">{{ $d -> nama_ruangan }}</option>
                                                     @endforeach      
@@ -344,12 +344,15 @@
             var alamat = $("#alamat").val();
             var no_hp = $("#no_hp").val();
             if (nik == ""){
+                //alert('nik harus diisi');
                 Swal.fire({
                     title: 'Info',
                     text: 'Nik masih kosong',
                     icon: 'warning',
                     confirmButtonText: 'Oke'
                 })
+                $("#nik").focus();
+                return false;
             } else if(nama_lengkap == ""){
                 Swal.fire({
                     title: 'Info',
@@ -357,6 +360,8 @@
                     icon: 'warning',
                     confirmButtonText: 'Oke'
                 })
+                $("#nama_lengkap").focus();
+                return false;
             } else if(jabatan == ""){
                 Swal.fire({
                     title: 'Info',
@@ -364,6 +369,8 @@
                     icon: 'warning',
                     confirmButtonText: 'Oke'
                 })
+                $("#jabatan").focus();
+                return false;
             } else if(kode_ruangan == ""){
                 Swal.fire({
                     title: 'Info',
@@ -371,6 +378,8 @@
                     icon: 'warning',
                     confirmButtonText: 'Oke'
                 })
+                $("#kode_ruangan").focus();
+                return false;
             } else if(alamat == ""){
                 Swal.fire({
                     title: 'Info',
@@ -378,6 +387,8 @@
                     icon: 'warning',
                     confirmButtonText: 'Oke'
                 })
+                $("#alamat").focus();
+                return false;
             } else if(jabatan == ""){
                 Swal.fire({
                     title: 'Info',
@@ -385,6 +396,8 @@
                     icon: 'warning',
                     confirmButtonText: 'Oke'
                 })
+                $("#jabatan").focus();
+                return false;
             } else if(no_hp == ""){
                 Swal.fire({
                     title: 'Info',
@@ -392,6 +405,8 @@
                     icon: 'warning',
                     confirmButtonText: 'Oke'
                 })
+                $("#no_hp").focus();
+                return false;
             }
             //$("#nik").focus();
             //#return false;
