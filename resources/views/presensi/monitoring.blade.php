@@ -40,6 +40,7 @@
                                             <th>NIK</th>
                                             <th>Name Karyawan</t>
                                             <th>Ruangan</th>
+                                            <th>Dinas</th>
                                             <th>Jam Masuk</th>
                                             <th>Foto</th>
                                             <th>Jam Pulang</th>

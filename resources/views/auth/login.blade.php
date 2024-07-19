@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#000000">
-    <title>E-Presensi Geolocation</title>
+    <title>RSSH E-Presensi</title>
     <meta name="description" content="{{asset('')}}Mobilekit HTML Mobile UI Kit">
     <meta name="keywords" content="bootstrap 4, mobile template, cordova, phonegap, mobile, html" />
     <link rel="icon" type="image/png" href="{{asset('assets/img/favicon.png')}}" sizes="32x32">
@@ -18,6 +18,20 @@
 </head>
 
 <body class="bg-white">
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Mengisi form dengan data dari local storage
+            if(localStorage.getItem('nik')) {
+                document.getElementById('nik').value = localStorage.getItem('nik');
+            }
+
+            // Menyimpan data ke local storage saat input berubah
+            document.getElementById('nik').addEventListener('input', function() {
+                localStorage.setItem('nik', this.value);
+            });
+        });
+    </script>
 
     <!-- loader -->
     <div id="loader">
@@ -67,6 +81,8 @@
                     </div>
                     <div align="left">
                         <input type="checkbox" onclick="showHide()"> Tampilkan Password
+                        <br>
+                        <a href="/panel">Administrator</a>
                     </div>
 
                     <script>

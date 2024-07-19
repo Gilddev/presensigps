@@ -3,7 +3,9 @@
 
 <head>
   <meta charset="utf-8">
-  <title>A4</title>
+  <title>Cetak Laporan Karyawan</title>
+
+  <link rel="icon" type="image/png" href="{{asset('assets/img/favicon.png')}}" sizes="32x32">
 
   <!-- Normalize or reset CSS with your favorite library -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
@@ -14,7 +16,7 @@
   <!-- Set page size here: A5, A4 or A3 -->
   <!-- Set also "landscape" if you need -->
     <style>
-        @page { size: A4 }
+        @page { size: legal}
 
         #title{
             font-family: Arial, Helvetica, sans-serif;
@@ -52,15 +54,48 @@
             width: 64px;
             height: 64px;
         }
+        .sheet {
+            overflow: visible;
+            height: auto !important;
+}
     </style>
 </head>
 
 <!-- Set "A5", "A4" or "A3" for class name -->
 <!-- Set also "landscape" if you need -->
-<body class="A4">
+<body class="legal">
 
         <?php
-        function selisih($jadwal_jam_masuk, $jam_kedatangan)
+        function selisihpagi($jadwal_jam_masuk, $jam_kedatangan)
+        {
+            list($h, $m, $s) = explode(":", $jadwal_jam_masuk);
+            $dtAwal = mktime($h, $m, $s, "1", "1", "1");
+            list($h, $m, $s) = explode(":", $jam_kedatangan);
+            $dtAkhir = mktime($h, $m, $s, "1", "1", "1");
+            $dtSelisih = $dtAkhir - $dtAwal;
+            $totalmenit = $dtSelisih / 60;
+            $jam = explode(".", $totalmenit / 60);
+            $sisamenit = ($totalmenit / 60) - $jam[0];
+            $sisamenit2 = $sisamenit * 60;
+            $jml_jam = $jam[0];
+            return $jml_jam . ":" . round($sisamenit2);
+        }
+
+        function selisihsiang($jadwal_jam_masuk, $jam_kedatangan)
+        {
+            list($h, $m, $s) = explode(":", $jadwal_jam_masuk);
+            $dtAwal = mktime($h, $m, $s, "1", "1", "1");
+            list($h, $m, $s) = explode(":", $jam_kedatangan);
+            $dtAkhir = mktime($h, $m, $s, "1", "1", "1");
+            $dtSelisih = $dtAkhir - $dtAwal;
+            $totalmenit = $dtSelisih / 60;
+            $jam = explode(".", $totalmenit / 60);
+            $sisamenit = ($totalmenit / 60) - $jam[0];
+            $sisamenit2 = $sisamenit * 60;
+            $jml_jam = $jam[0];
+            return $jml_jam . ":" . round($sisamenit2);
+        }
+        function selisihmalam($jadwal_jam_masuk, $jam_kedatangan)
         {
             list($h, $m, $s) = explode(":", $jadwal_jam_masuk);
             $dtAwal = mktime($h, $m, $s, "1", "1", "1");
@@ -131,9 +166,10 @@
             <tr>
                 <th>No</th>
                 <th>Tanggal</th>
+                <th>Dinas</th>
                 <th>Jam Masuk</th>
                 <th>Foto</th>
-                <th>Jam Keluar</th>
+                <th>Jam Pulang</th>
                 <th>Foto</th>
                 <th>Keterangan</th>
                 <th>Jam Kerja</th>
@@ -142,11 +178,14 @@
                     @php
                     $path_foto_in = Storage::url('upload/absensi/' . $d -> foto_in);
                     $path_foto_out = Storage::url('upload/absensi/' . $d -> foto_out);
-                    $jam_terlambat = selisih('08:00:00', $d -> jam_in);
+                    $jam_terlambat_pagi = selisihpagi('08:00:00', $d -> jam_in);
+                    $jam_terlambat_siang = selisihsiang('14:00:00', $d -> jam_in);
+                    $jam_terlambat_malam = selisihmalam('20:00:00', $d -> jam_in);
                     @endphp
                     <tr>
                         <td>{{ $loop -> iteration }}</td>
                         <td>{{ date("d-m-Y", strtotime($d -> tgl_presensi)) }}</td>
+                        <td>{{ $d -> dinas }}</td>
                         <td>{{ $d -> jam_in }}</td>
                         <td><img src="{{ url($path_foto_in) }}" class="foto" alt=""></td>
                         <td>{{ $d -> jam_out != null ? $d -> jam_out : 'Belum Absen' }}</td>
@@ -158,17 +197,31 @@
                             @endif
                         </td>
                         <td>
-                            @if ($d -> jam_in > '08:00')
-                                Terlambat {{ $jam_terlambat }}
+                            @if ($d -> dinas == 'Pagi' && $d -> jam_in > '08:00:00')
+                                Terlambat {{ $jam_terlambat_pagi }}
+                            @elseif ($d -> dinas == 'Siang' && $d -> jam_in > '13:00:00')
+                                Terlambat {{ $jam_terlambat_siang }}
+                            @elseif ($d -> dinas == 'Malam' && $d -> jam_in > '20:00:00')
+                                Terlambat {{ $jam_terlambat_malam }}
                             @else
                                 Tepat Waktu
                             @endif
                         </td>
                         <td>
                             @if ($d -> jam_out != null)
-                                @php
-                                    $jmljamkerja = selisih($d -> jam_in, $d -> jam_out);
-                                @endphp
+                                @if ($d -> dinas == "Pagi")
+                                    @php
+                                        $jmljamkerja = selisihpagi($d -> jam_in, $d -> jam_out);
+                                    @endphp
+                                @elseif ($d -> dinas == "Siang")
+                                    @php
+                                        $jmljamkerja = selisihsiang($d -> jam_in, $d -> jam_out);
+                                    @endphp
+                                @elseif ($d -> dinas == "Malam")
+                                    @php
+                                        $jmljamkerja = selisihmalam($d -> jam_in, $d -> jam_out);
+                                    @endphp
+                                @endif
                             @else
                                 @php
                                     $jmljamkerja = 0;
@@ -188,7 +241,7 @@
             <tr>
                 <td style="text-align: center; vertical-align: bottom" height="150px">
                     <u>Agil Dwi Sulistyo</u><br>
-                    <i>HRD Manager</i>
+                    <i>Administrator</i>
                 </td>
                 <td style="text-align: center; vertical-align: bottom">
                     <u>Rusli A. Katili</u><br>

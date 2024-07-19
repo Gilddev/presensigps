@@ -4,7 +4,7 @@
             <span class="navbar-toggler-icon"></span>
           </button>
           <h1 class="navbar-brand navbar-brand-autodark">
-            <a href=".">
+            <a href="#">
               <img src="{{asset('tabler/static/logo.svg')}}" width="110" height="32" alt="Tabler" class="navbar-brand-image">
             </a>
           </h1>
@@ -205,7 +205,7 @@
                   <div class="dropdown-menu-columns">
                     <div class="dropdown-menu-column">
                       <a class="dropdown-item" href="/presensi/laporan">
-                        Presensi
+                        Rekap Karyawan
                       </a>
                       <a class="dropdown-item" href="/presensi/rekap">
                         Rekap Presensi

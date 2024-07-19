@@ -50,7 +50,7 @@
                       </div>
                       <div class="col">
                         <div class="font-weight-medium">
-                          {{ $rekapizin -> jmlizin}}
+                          {{ $rekapizin -> jmlizin }}
                         </div>
                         <div class="text-secondary">
                           Karyawan Izin

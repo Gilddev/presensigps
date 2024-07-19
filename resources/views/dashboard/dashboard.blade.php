@@ -145,7 +145,9 @@
                     <div class="col-3">
                         <div class="card">
                             <div class="card-body text-center" style="padding: 12px 12px !important">
-                                <span class="badge bg-danger" style="position: absolute; top: 3px; right: 8px; font-size: 0.6rem; z-index:999">{{$rekappresensi->jmlhadir}}</span>
+                                <span class="badge bg-danger" style="position: absolute; top: 3px; right: 8px; font-size: 0.6rem; z-index:999">
+                                    {{$rekappresensi->jmlhadir}}
+                                </span>
                                 <ion-icon name="accessibility-outline" style="font-size: 1.6rem" class="text-primary mb-1"></ion-icon>
                                 <br>
                                 <span style="font-size: 0.8rem font-weight: 500">Hadir</span>
@@ -179,7 +181,9 @@
                     <div class="col-3">
                         <div class="card">
                             <div class="card-body text-center" style="padding: 12px 12px !important">
-                                <span class="badge bg-danger" style="position: absolute; top: 3px; right: 8px; font-size: 0.6rem; z-index:999">{{$rekappresensi->jmlterlambat}}</span>
+                                <span class="badge bg-danger" style="position: absolute; top: 3px; right: 8px; font-size: 0.6rem; z-index:999">
+                                    {{$rekappresensi->jmlterlambat}}
+                                </span>
                                 <ion-icon name="timer-outline" style="font-size: 1.6rem" class="text-danger mb-1"></ion-icon>
                                 <br>
                                 <span style="font-size: 0.8rem font-weight: 500">Telat</span>
@@ -218,8 +222,9 @@
                                     </div>
                                     <div class="in">
                                         <div>{{date("d-m-Y", strtotime($d -> tgl_presensi))}}</div>
-                                        <span class="badge badge-success">{{$d -> jam_in}}</span>
-                                        <span class="badge badge-danger">{{$presensihariini && $presensihariini->jam_out != null ? $presensihariini-> jam_out : 'Belum Absen'}}</span>
+                                        <span class="badge badge-warning">{{ $d -> dinas }}</span>
+                                        <span class="badge badge-success">{{ $d -> jam_in}}</span>
+                                        <span class="badge badge-danger">{{$d->jam_out != null ? $d-> jam_out : 'Belum Absen'}}</span>
                                     </div>
                                 </div>
                             </li>

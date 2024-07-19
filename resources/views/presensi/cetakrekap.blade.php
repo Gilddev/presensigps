@@ -3,7 +3,9 @@
 
 <head>
   <meta charset="utf-8">
-  <title>A4</title>
+  <title>Cetak Rekap Presensi</title>
+
+  <link rel="icon" type="image/png" href="{{asset('assets/img/favicon.png')}}" sizes="32x32">
 
   <!-- Normalize or reset CSS with your favorite library -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
@@ -14,7 +16,7 @@
   <!-- Set page size here: A5, A4 or A3 -->
   <!-- Set also "landscape" if you need -->
     <style>
-        @page { size: A4 }
+        @page { size: A3 landscape}
 
         #title{
             font-family: Arial, Helvetica, sans-serif;
@@ -42,7 +44,7 @@
         .tabelpresensi th{
             border: 1px solid;
             padding: 8px;
-            font-size: 10px;
+            font-size: 8px;
         }
         .tabelpresensi td{
             font-size: 8px;
@@ -53,29 +55,33 @@
             width: 64px;
             height: 64px;
         }
+        .sheet {
+            overflow: visible;
+            height: auto !important;
+        }
     </style>
 </head>
 
 <!-- Set "A5", "A4" or "A3" for class name -->
 <!-- Set also "landscape" if you need -->
-<body class="A4 landscape">
+<body class="A3 landscape">
 
-        <?php
-        function selisih($jadwal_jam_masuk, $jam_kedatangan)
-        {
-            list($h, $m, $s) = explode(":", $jadwal_jam_masuk);
-            $dtAwal = mktime($h, $m, $s, "1", "1", "1");
-            list($h, $m, $s) = explode(":", $jam_kedatangan);
-            $dtAkhir = mktime($h, $m, $s, "1", "1", "1");
-            $dtSelisih = $dtAkhir - $dtAwal;
-            $totalmenit = $dtSelisih / 60;
-            $jam = explode(".", $totalmenit / 60);
-            $sisamenit = ($totalmenit / 60) - $jam[0];
-            $sisamenit2 = $sisamenit * 60;
-            $jml_jam = $jam[0];
-            return $jml_jam . ":" . round($sisamenit2);
-        }
-        ?>
+        <!-- <?php
+        // function selisih($jadwal_jam_masuk, $jam_kedatangan)
+        // {
+        //     list($h, $m, $s) = explode(":", $jadwal_jam_masuk);
+        //     $dtAwal = mktime($h, $m, $s, "1", "1", "1");
+        //     list($h, $m, $s) = explode(":", $jam_kedatangan);
+        //     $dtAkhir = mktime($h, $m, $s, "1", "1", "1");
+        //     $dtSelisih = $dtAkhir - $dtAwal;
+        //     $totalmenit = $dtSelisih / 60;
+        //     $jam = explode(".", $totalmenit / 60);
+        //     $sisamenit = ($totalmenit / 60) - $jam[0];
+        //     $sisamenit2 = $sisamenit * 60;
+        //     $jml_jam = $jam[0];
+        //     return $jml_jam . ":" . round($sisamenit2);
+        // }
+        ?> -->
 
   <!-- Each sheet element should have the class "sheet" -->
   <!-- "padding-**mm" is optional: you can set 10, 15, 20 or 25 -->
@@ -100,7 +106,7 @@
         
     <table class="tabelpresensi">
         <tr>
-            <th rowspan="2">Nik</th>
+            <!-- <th rowspan="2">Nik</th> -->
             <th rowspan="2">Nama Karyawan</th>
             <th colspan="31">Tanggal</th>
             <th rowspan="2">TH</th>
@@ -115,31 +121,46 @@
             }
             ?>
         </tr>
+        
         @foreach ($rekap as $d)
             <tr>
-                <td>{{ $d->nik }}</td>
-                <td>{{ $d->nama_lengkap }}</td>
-
+                <!-- <td>{{ $d->nik }}</td> -->
+                <td>{{ $d -> nama_lengkap }}</td>
+                
                 <?php
                     $totalhadir = 0;
                     $totalterlambat = 0;
                     for($i = 1; $i <= 31; $i++){
                     $tgl = "tgl_" . $i;
             
-                    if(empty($d->$tgl)){
-                        $hadir = ['',''];
+                    if(empty($d -> $tgl)){
+                        $hadir = ['','',''];
                         $totalhadir += 0;
                     }else{
                         $hadir = explode("-", $d->$tgl);
                         $totalhadir += 1;
-                        if($hadir[0] > "08:00:00"){
+                        if($hadir[0] == "Pagi" && $hadir[1] > "08:00:00"){
+                            $totalterlambat += 1;
+                        }elseif($hadir[0] == "Siang" && $hadir[1] > "14:00:00"){
+                            $totalterlambat += 1;
+                        }elseif($hadir[0] == "Malam" && $hadir[1] > "20:00:00"){
                             $totalterlambat += 1;
                         }
                     }
-                ?>
+                    ?>
                 <td>
-                    <span style="color: {{ $hadir[0] > "08:00:00" ? "red" : ""}}">{{ isset($hadir[0]) ? $hadir[0] : '0' }}<br></span>
-                    <span style="color: {{ $hadir[1] < "16:30:00" ? "red" : ""}}">{{ isset($hadir[1]) ? $hadir[1] : '1' }}<br></span>
+                    <span>
+                        {{ isset($hadir[0]) ? $hadir[0] : '0' }}<br>
+                    </span>
+                    <!-- <span style="color: {{ $hadir[0] == "Pagi" && $hadir[1] > "08:00:00" ? "red" : ""}}">
+                        {{ isset($hadir[1]) ? $hadir[1] : '1' }}<br>
+                    </span> -->
+                    <span style="color: {{ ($hadir[0] == "Pagi" && $hadir[1] > "08:00:00") || ($hadir[0] == "Siang" && $hadir[1] > "14:00:00") || ($hadir[0] == "Siang" && $hadir[1] > "14:00:00") ? "red" : ""}}">
+                        {{ isset($hadir[1]) ? $hadir[1] : '1' }}<br>
+                    </span>
+                    <span>
+                        {{ isset($hadir[2]) ? $hadir[2] : '2' }}<br>
+                    </span>
                 </td>
                 <?php
                     }
@@ -158,7 +179,7 @@
             <tr>
                 <td style="text-align: center; vertical-align: bottom" height="150px">
                     <u>Agil Dwi Sulistyo</u><br>
-                    <i>HRD Manager</i>
+                    <i>Administrator</i>
                 </td>
                 <td style="text-align: center; vertical-align: bottom">
                     <u>Rusli A. Katili</u><br>

@@ -26,7 +26,15 @@ class DashboardController extends Controller
         
         // menampilkan rekap presensi pada dashboard presensi karyawan
         $rekappresensi = DB::table('presensi') 
-            -> selectRaw('COUNT(nik) as jmlhadir, SUM(IF(jam_in > "08:00", 1, 0)) as jmlterlambat') 
+            // -> selectRaw('COUNT(nik) as jmlhadir, SUM(IF(jam_in > "08:00", 1, 0)) as jmlterlambat') 
+            // -> selectRaw('COUNT(nik) as jmlhadir, SUM(IF(dinas = "Pagi" AND jam_in > "08:00", 1, 0)) as jmlterlambat') 
+            -> selectRaw('COUNT(nik) as jmlhadir, 
+                SUM(CASE
+                    WHEN dinas = "Pagi" AND jam_in > "08:00" THEN 1
+                    WHEN dinas = "Siang" AND jam_in > "13:00" THEN 1
+                    WHEN dinas = "Malam" AND jam_in > "20:00" THEN 1
+                    ELSE 0
+                END )AS jmlterlambat')
             -> where('nik', $nik)
             -> whereRaw('MONTH(tgl_presensi)="' . $bulanini . '"')
             -> whereRaw('YEAR(tgl_presensi)="' . $tahunini . '"')

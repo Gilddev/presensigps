@@ -31,6 +31,8 @@
 @endsection
 
 @section('content')
+
+
 <div class="row" style="margin-top: 70px">
      <div class="col">
         <input type="hidden" id="lokasi">
@@ -40,33 +42,32 @@
 
 <div class="row">
     <div class="col">
+
         @if ($cek > 0)
-        <div align="center" style="display:none;">
-            <h3 align="center">Pilih Waktu Dinas :</h3>
-            <form>
-                <input type="radio" id="pagi" name="waktuDinas" value="Pagi" onclick="myFunction(this.value)">
-                <label for="pagi">Pagi</label>
-                <input type="radio" id="siang" name="waktuDinas" value="Siang" onclick="myFunction(this.value)">
-                <label for="siang">Siang</label>
-                <input type="radio" id="malam" name="waktuDinas" value="Malam" onclick="myFunction(this.value)">
-                <label for="malam">Malam</label><br>
-                <input type="text" id="dinas" hidden>
-            </form>
-        </div>
-        <button id="takeabsen" class="btn btn-danger btn-block">
-            <ion-icon name="camera-outline"></ion-icon>
-            Absen Pulang
-        </button>
+
+        @foreach ($cekkondisi as $d)
+
+            @if (!empty($d -> jam_in) && empty($d -> jam_out))
+                <button id="takeabsen" class="btn btn-danger btn-block">
+                    <ion-icon name="camera-outline"></ion-icon>
+                    Absen Pulang
+                </button>
+            @elseif (!empty($d -> jam_in) && !empty($d -> jam_out))
+                <span>Anda Sudah Absen Hari Ini. Terima Kasih</span>
+            @endif
+        
+        @endforeach
+
         @else
         <div align="center" style="display:block">
             <h3 align="center">Pilih Waktu Dinas :</h3>
             <form>
                 <input type="radio" id="pagi" name="waktuDinas" value="Pagi" onclick="myFunction(this.value)">
-                <label for="pagi">Pagi</label>
+                <label for="pagi">PAGI</label>
                 <input type="radio" id="siang" name="waktuDinas" value="Siang" onclick="myFunction(this.value)">
-                <label for="siang">Siang</label>
+                <label for="siang">SIANG</label>
                 <input type="radio" id="malam" name="waktuDinas" value="Malam" onclick="myFunction(this.value)">
-                <label for="malam">Malam</label><br>
+                <label for="malam">MALAM</label><br>
                 <input type="text" id="dinas" hidden>
             </form>
         </div>
@@ -75,8 +76,40 @@
             Absen Masuk
         </button>
         @endif
+
+        <!-- @foreach ($cekkondisi as $d)
+
+            @if ($cek = 0)
+                <div align="center" style="display:block">
+            <h3 align="center">Pilih Waktu Dinas :</h3>
+            <form>
+                <input type="radio" id="pagi" name="waktuDinas" value="Pagi" onclick="myFunction(this.value)">
+                <label for="pagi">PAGI</label>
+                <input type="radio" id="siang" name="waktuDinas" value="Siang" onclick="myFunction(this.value)">
+                <label for="siang">SIANG</label>
+                <input type="radio" id="malam" name="waktuDinas" value="Malam" onclick="myFunction(this.value)">
+                <label for="malam">MALAM</label><br>
+                <input type="text" id="dinas" hidden>
+            </form>
+        </div>
+        <button id="takeabsen" class="btn btn-primary btn-block">
+            <ion-icon name="camera-outline"></ion-icon>
+            Absen Masuk
+        </button>
+            @elseif (!empty($d -> jam_in) && empty($d -> jam_out))
+                <button id="takeabsen" class="btn btn-danger btn-block">
+                    <ion-icon name="camera-outline"></ion-icon>
+                    Absen Pulang
+                </button>
+            @elseif (!empty($d -> jam_in) && !empty($d -> jam_out))
+                <span>Anda Sudah Absen Hari Ini</span>
+            @endif
+        
+        @endforeach -->
+           
     </div>
 </div>
+
 <div class="row mt-2">
     <div class="col">
         <div id="map"></div>
@@ -146,47 +179,59 @@
 
     // ketika tombol ambil absen di tekan
     $("#takeabsen").click(function(e){
-        Webcam.snap(function(uri){
-            image = uri;
-        });
         var lokasi = $("#lokasi").val();
         var dinas = $("#dinas").val();
-        $.ajax({
-            type:'POST',
-            url:'/presensi/store',
-            data:{
-                _token:"{{csrf_token()}}",
-                image:image,
-                lokasi:lokasi,
-                dinas:dinas
-            },
-            cache:false,
-            success:function(respond){
-                var status = respond.split("|");
-                if(status[0] == 'success'){
-                    if(status[2] == 'in'){
-                        notifikasi_in.play();
-                    }else{
-                        notifikasi_out.play();
+        if(dinas == ''){
+            //alert('Pilih Waktu Dinas')
+            Swal.fire({
+                title: "Info",
+                text: "Silahkan Pilih Waktu Dinas",
+                icon: "info"
+            });
+        }else{
+            Webcam.snap(function(uri){
+                image = uri;
+            });
+            // var lokasi = $("#lokasi").val();
+            // var dinas = $("#dinas").val();
+            $.ajax({
+                type:'POST',
+                url:'/presensi/store',
+                data:{
+                    _token:"{{csrf_token()}}",
+                    image:image,
+                    lokasi:lokasi,
+                    dinas:dinas
+                },
+                cache:false,
+                success:function(respond){
+                    var status = respond.split("|");
+                    if(status[0] == 'success'){
+                        if(status[2] == 'in'){
+                            notifikasi_in.play();
+                        }else{
+                            notifikasi_out.play();
+                        }
+                        Swal.fire({
+                        title: 'Absensi Berhasil',
+                        text: status[1],
+                        icon: 'success',
+                        showConfirmButton: false
+                        })
+                        setTimeout("location.href='/dashboard'", 3000);
+                    } else{
+                        if(status[2] == 'radius'){
+                            notifikasi_outradius.play();
+                        }
+                        Swal.fire({
+                        title: 'Absensi Gagal',
+                        text: status[1],
+                        icon: 'error',
+                        })
                     }
-                    Swal.fire({
-                      title: 'Absensi Berhasil',
-                      text: status[1],
-                      icon: 'success',
-                    })
-                    setTimeout("location.href='/dashboard'", 3000);
-                } else{
-                    if(status[2] == 'radius'){
-                        notifikasi_outradius.play();
-                    }
-                    Swal.fire({
-                      title: 'Absensi Gagal',
-                      text: status[1],
-                      icon: 'error',
-                    })
                 }
-            }
-        });
+            });
+        }  
     });
 
 </script>
