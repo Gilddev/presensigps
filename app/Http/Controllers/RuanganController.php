@@ -26,21 +26,38 @@ class RuanganController extends Controller
     public function store(Request $request){
         $kode_ruangan = $request -> kode_ruangan;
         $nama_ruangan = $request -> nama_ruangan;
-        $data = [
-            'kode_ruangan' => $kode_ruangan,
-            'nama_ruangan' => $nama_ruangan
-        ];
+        // $data = [
+        //     'kode_ruangan' => $kode_ruangan,
+        //     'nama_ruangan' => $nama_ruangan
+        // ];
 
-        $cek = DB::table('ruangan') -> where('kode_ruangan', $kode_ruangan) -> count();
-        if($cek > 0){
-            return Redirect::back() -> with(['success' => 'Data Dengan Kode ' . $kode_ruangan . ' Sudah Ada']);
+        // $cek = DB::table('ruangan') -> where('kode_ruangan', $kode_ruangan) -> count();
+        // if($cek > 0){
+        //     return Redirect::back() -> with(['warning' => 'Data Dengan Kode ' . $kode_ruangan . ' Sudah Ada']);
+        // }
+        // $simpan = DB::table('ruangan') -> insert($data);
+        // if($simpan){
+        //     return Redirect::back() -> with(['success' => 'Data Berhasil Disimpan']);
+        // } else {
+        //     return Redirect::back() -> with(['warning' => 'Data Gagal Disimpan']);           
+        // }
+
+        try {
+            $data = [
+                'kode_ruangan' => $kode_ruangan,
+                'nama_ruangan' => $nama_ruangan
+            ];
+            $simpan = DB::table('ruangan') -> insert($data);
+            if ($simpan) {
+                return Redirect::back() -> with(['success' => 'Data Ruangan Berhasil Disimpan.']);
+            }
+        } catch (\Exception $e) {
+            if($e -> getCode() == 23000){
+                $message = '. Data dengan kode ' . $kode_ruangan . ' sudah terdaftar.';
+            }
+            return Redirect::back() -> with(['warning' => 'Data gagal disimpan' . $message]);
         }
-        $simpan = DB::table('ruangan') -> insert($data);
-        if($simpan){
-            return Redirect::back() -> with(['success' => 'Data Berhasil Disimpan']);
-        } else {
-            return Redirect::back() -> with(['warning' => 'Data Gagal Disimpan']);           
-        }
+
     }
 
     public function edit(Request $request){

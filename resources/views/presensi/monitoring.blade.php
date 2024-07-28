@@ -46,7 +46,7 @@
                                             <th>Jam Pulang</th>
                                             <th>Foto</th>
                                             <th>Keterangan</th>
-                                            <th>Lokasi</th>
+                                            <th>Detail</th>
                                         </tr>
                                     </thead>
                                     <tbody id="loadpresensi"></tbody>
@@ -65,7 +65,7 @@
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Lokasi Presensi Karyawan</h5>
+            <h5 class="modal-title">Detail Presensi Karyawan</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body" id="loadmap">

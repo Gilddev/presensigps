@@ -29,7 +29,7 @@
                                     </div>
                                 @endif
 
-                                @if (Session::get('warnig'))
+                                @if (Session::get('warning'))
                                     <div class="alert alert-warning">
                                         {{ Session::get('warning') }}
                                     </div>
@@ -344,7 +344,6 @@
             var alamat = $("#alamat").val();
             var no_hp = $("#no_hp").val();
             if (nik == ""){
-                //alert('nik harus diisi');
                 Swal.fire({
                     title: 'Info',
                     text: 'Nik masih kosong',

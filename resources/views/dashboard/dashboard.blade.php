@@ -91,51 +91,96 @@
         <div class="section mt-2" id="presence-section">
             <div class="todaypresence">
                 <div class="row">
+
                     <div class="col-6">
-                        <div class="card gradasigreen">
-                            <div class="card-body">
-                                <div class="presencecontent">
-                                    <div class="iconpresence">
-                                        @if ($presensihariini != null)
-                                            @php
-                                                $path = Storage::url('upload/absensi/' . $presensihariini -> foto_in);
-                                            @endphp
-                                            <img src="{{url($path)}}" alt="" class="imaged w64">
-                                        @else
-                                            <ion-icon name="camera"></ion-icon>
-                                        @endif
-                                    </div>
-                                    <div class="presencedetail">
-                                        <h4 class="presencetitle">Masuk</h4>
-                                        <span>{{ $presensihariini ? $presensihariini->jam_in : 'Belum Absen' }}</span>
-                                        {{--<span>{{$presensihariini != null ? $presensihariini->jam_in : 'Belum Absen'}}</span>--}}
+                        @php
+                            if ($presensihariini && $presensihariini->foto_in) {
+                                $path = Storage::url('upload/absensi/' . $presensihariini->foto_in);
+                            } else {
+                                // URL gambar default jika gambar tidak ada di database
+                                $path = 'assets/img/sample/avatar/default.jpg';
+                            }
+                        @endphp
+                        <script>
+                            function showinimages(event) {
+                                Swal.fire({
+                                    text: "Absen Masuk",
+                                    imageUrl: "{{ url($path) }}", // Pastikan URL dimasukkan sebagai string yang valid
+                                    imageWidth: 400,
+                                    imageHeight: 300,
+                                    imageAlt: "Custom image"
+                                });
+                            }
+                        </script>
+                        <a href="#" onclick="showinimages(event)">
+                            <div class="card gradasigreen">
+                                <div class="card-body">
+                                    <div class="presencecontent">
+                                        <div class="iconpresence">
+                                            @if ($presensihariini != null)
+                                                @php
+                                                    $path = Storage::url('upload/absensi/' . $presensihariini->foto_in);
+                                                @endphp
+                                                <img src="{{ url($path) }}" alt="" class="imaged w64">
+                                            @else
+                                                <ion-icon name="camera"></ion-icon>
+                                            @endif
+                                        </div>
+                                        <div class="presencedetail">
+                                            <h4 class="presencetitle">Masuk</h4>
+                                            <span>{{ $presensihariini ? $presensihariini->jam_in : 'Belum Absen' }}</span>
+                                            {{--<span>{{$presensihariini != null ? $presensihariini->jam_in : 'Belum Absen'}}</span>--}}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
+
                     <div class="col-6">
-                        <div class="card gradasired">
-                            <div class="card-body">
-                                <div class="presencecontent">
-                                    <div class="iconpresence">
-                                    @if ($presensihariini != null && $presensihariini -> jam_out != null)
-                                            @php
-                                                $path = Storage::url('upload/absensi/' . $presensihariini -> foto_out);
-                                            @endphp
-                                            <img src="{{url($path)}}" alt="" class="imaged w64">
-                                        @else
-                                            <ion-icon name="camera"></ion-icon>
-                                        @endif
-                                    </div>
-                                    <div class="presencedetail">
-                                        <h4 class="presencetitle">Pulang</h4>
-                                        <span>{{$presensihariini && $presensihariini->jam_out != null ? $presensihariini-> jam_out : 'Belum Absen'}}</span>
+                        @php  
+                            if ($presensihariini && $presensihariini->foto_out) {
+                                $path = Storage::url('upload/absensi/' . $presensihariini->foto_out);
+                            } else {
+                                // URL gambar default jika gambar tidak ada di database
+                                $path = 'assets/img/sample/avatar/default.jpg';
+                            }
+                        @endphp
+                        <script>
+                            function showoutimages(event) {
+                                Swal.fire({
+                                    text: "Absen Pulang",
+                                    imageUrl: "{{ url($path) }}", // Pastikan URL dimasukkan sebagai string yang valid
+                                    imageWidth: 400,
+                                    imageHeight: 300,
+                                    imageAlt: "Custom image"
+                                });
+                            }
+                        </script>
+                        <a href="#" onclick="showoutimages(event)">
+                            <div class="card gradasired">
+                                <div class="card-body">
+                                    <div class="presencecontent">
+                                        <div class="iconpresence">
+                                        @if ($presensihariini != null && $presensihariini -> jam_out != null)
+                                                @php
+                                                    $path = Storage::url('upload/absensi/' . $presensihariini -> foto_out);
+                                                @endphp
+                                                <img src="{{url($path)}}" alt="" class="imaged w64">
+                                            @else
+                                                <ion-icon name="camera"></ion-icon>
+                                            @endif
+                                        </div>
+                                        <div class="presencedetail">
+                                            <h4 class="presencetitle">Pulang</h4>
+                                            <span>{{$presensihariini && $presensihariini->jam_out != null ? $presensihariini-> jam_out : 'Belum Absen'}}</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            </div>  
+                        </a>
                     </div>
+
                 </div>
             </div>
 

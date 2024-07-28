@@ -1,4 +1,4 @@
-<form action="/ruangan/{{ $ruangan -> kode_ruangan }}/update" method="POST" id="formtambahruangan">
+<form action="/ruangan/{{ $ruangan -> kode_ruangan }}/update" method="POST" id="edit">
                 @csrf
                 <!-- untuk menampilkan form pengisian data karyawan -->
                 <div class="row">

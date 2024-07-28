@@ -65,14 +65,14 @@ class KaryawanController extends Controller
                     $folderPath = "public/upload/karyawan/";
                     $request -> file('foto') -> storeAs($folderPath, $foto);
                 }
-                return Redirect::back() -> with(['success' => 'Data Berhasil Disimpan']);
+                return Redirect::back() -> with(['success' => 'Data Berhasil Disimpan.']);
             }
         } catch (\Exception $e) {
-            //dd($e->getMessage());
+            //dd($e->getCode());
             if($e -> getCode() == 23000){
-                $message = ", Data dengan Nik " . $nik . " sudah terdaftar";
+                $message = '. Data dengan Nik ' . $nik . ' sudah terdaftar.';
             }
-            return Redirect::back() -> with(['warning' => 'Data Gagal Disimpan' . $message]);
+            return Redirect::back() -> with(['warning' => 'Data gagal disimpan' . $message]);
         }
     }
 

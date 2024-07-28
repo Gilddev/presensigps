@@ -1,11 +1,35 @@
 <style>
     #map { height: 320px; }
+    #fotoin { height: 320px; }
+    #fotoout { height: 320px; }
 </style>
-<!-- {{ $presensi -> lokasi_in }} -->
+
+@php
+    $defaultImage = 'assets/img/sample/avatar/default.jpg';
+
+    if ($presensi && $presensi->foto_in) {
+        $pathin = Storage::url('upload/absensi/' . $presensi -> foto_in);
+    } else {
+        // URL gambar default jika gambar tidak ada di database
+        $pathin = asset($defaultImage);
+    }
+
+    if ($presensi && $presensi->foto_out) {
+        $pathout = Storage::url('upload/absensi/' . $presensi -> foto_out);
+    } else {
+        // URL gambar default jika gambar tidak ada di database
+        $pathout = asset($defaultImage);
+    }
+@endphp
+Foto In
+<div id="fotoin"><img src="{{ $pathin }}" alt="" height="100%"></div>
+Foto Out
+<div id="fotoout"><img src="{{ $pathout }}" alt="" height="100%"></div>
+<br>
+Lokasi Pengambilan Absensi
 <div id="map"></div>
 
 <script>
-
     var lokasi = "{{ $presensi -> lokasi_in }}";
     var lok = lokasi.split(",");
     var latitude = lok[0];
@@ -29,5 +53,4 @@
     .setLatLng([latitude, longitute])
     .setContent("{{ $presensi -> nama_lengkap }}")
     .openOn(map);
-
 </script>

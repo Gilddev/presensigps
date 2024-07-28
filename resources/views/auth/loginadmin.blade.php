@@ -109,6 +109,12 @@
                         <span class="form-c"></span>
                       </label>
                     </div>
+
+                    <div align="left">
+                        <br>
+                        <a href="/">Absensi Karyawan</a>
+                    </div>
+
                     <div class="form-footer">
                       <button type="submit" class="btn btn-primary w-100">Sign in</button>
                     </div>
@@ -120,7 +126,7 @@
             </div>
           </div>
           <div class="col-lg d-none d-lg-block">
-            <img src="{{asset('tabler/static/illustrations/undraw_secure_login_pdn4.svg')}}" height="300" class="d-block mx-auto" alt="">
+            <img src="{{asset('tabler/static/illustrations/undraw_medicine_b1ol.svg')}}" height="350" class="d-block mx-auto" alt="">
           </div>
         </div>
       </div>
