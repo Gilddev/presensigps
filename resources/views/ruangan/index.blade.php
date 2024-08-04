@@ -238,18 +238,22 @@
                     icon: 'warning',
                     confirmButtonText: 'Oke'
                 })
-                $("#kode_ruangan").focus();
+                .then((result) => {
+                        $("#kode_ruangan").focus();
+                    });     
                 return false;
-            } else if(nama_ruangan == ""){
-                Swal.fire({
-                    title: 'Info',
-                    text: 'Nama ruangan masih kosong',
-                    icon: 'warning',
-                    confirmButtonText: 'Oke'
-                })
-                $("#nama_ruangan").focus();
-                return false;
-            }
+                }
+            // }else if(nama_ruangan == ""){
+            //         Swal.fire({
+            //             title: "Info",
+            //             text: "Nama ruangan masih kosong",
+            //             icon: "warning",
+            //             confirmButtonText: "Oke"
+            //         }).then((result) => {
+            //             $("#nama_ruangan").focus();
+            //         });     
+            //     return false; 
+            // }
         });
     });
 </script>

@@ -44,10 +44,10 @@
         .tabelpresensi th{
             border: 1px solid;
             padding: 8px;
-            font-size: 8px;
+            font-size: 12px;
         }
         .tabelpresensi td{
-            font-size: 8px;
+            font-size: 12px;
             border: 1px solid;
             padding: 8px;
         }
@@ -65,23 +65,6 @@
 <!-- Set "A5", "A4" or "A3" for class name -->
 <!-- Set also "landscape" if you need -->
 <body class="A3 landscape">
-
-        <!-- <?php
-        // function selisih($jadwal_jam_masuk, $jam_kedatangan)
-        // {
-        //     list($h, $m, $s) = explode(":", $jadwal_jam_masuk);
-        //     $dtAwal = mktime($h, $m, $s, "1", "1", "1");
-        //     list($h, $m, $s) = explode(":", $jam_kedatangan);
-        //     $dtAkhir = mktime($h, $m, $s, "1", "1", "1");
-        //     $dtSelisih = $dtAkhir - $dtAwal;
-        //     $totalmenit = $dtSelisih / 60;
-        //     $jam = explode(".", $totalmenit / 60);
-        //     $sisamenit = ($totalmenit / 60) - $jam[0];
-        //     $sisamenit2 = $sisamenit * 60;
-        //     $jml_jam = $jam[0];
-        //     return $jml_jam . ":" . round($sisamenit2);
-        // }
-        ?> -->
 
   <!-- Each sheet element should have the class "sheet" -->
   <!-- "padding-**mm" is optional: you can set 10, 15, 20 or 25 -->
@@ -108,65 +91,59 @@
         <tr>
             <!-- <th rowspan="2">Nik</th> -->
             <th rowspan="2">Nama Karyawan</th>
-            <th colspan="31">Tanggal</th>
+            <th colspan="{{ $jmlhari }}">Bulan {{ $namabulan[(string)$bulan] }} {{ $tahun }}</th>
+            <th rowspan="2">H</th>
+            <th rowspan="2">I</th>
+            <th rowspan="2">S</th>
             <th rowspan="2">TH</th>
-            <th rowspan="2">TT</th>
         </tr>
         <tr>
-            <?php
-            for($i = 1; $i <= 31; $i++){
-            ?>
-                <th>{{ $i }}</th>
-            <?php
-            }
-            ?>
+            @foreach ($rangetanggal as $d)
+            @if ($d != NULL)
+                <th>{{ date("d", strtotime($d)) }}</th>
+            @endif
+            @endforeach
         </tr>
-        
-        @foreach ($rekap as $d)
+        @foreach ($rekap as $r)
             <tr>
-                <!-- <td>{{ $d->nik }}</td> -->
-                <td>{{ $d -> nama_lengkap }}</td>
-                
-                <?php
-                    $totalhadir = 0;
-                    $totalterlambat = 0;
-                    for($i = 1; $i <= 31; $i++){
-                    $tgl = "tgl_" . $i;
-            
-                    if(empty($d -> $tgl)){
-                        $hadir = ['','',''];
-                        $totalhadir += 0;
-                    }else{
-                        $hadir = explode("-", $d->$tgl);
-                        $totalhadir += 1;
-                        if($hadir[0] == "Pagi" && $hadir[1] > "08:00:00"){
-                            $totalterlambat += 1;
-                        }elseif($hadir[0] == "Siang" && $hadir[1] > "14:00:00"){
-                            $totalterlambat += 1;
-                        }elseif($hadir[0] == "Malam" && $hadir[1] > "20:00:00"){
-                            $totalterlambat += 1;
-                        }
-                    }
+                <td>{{ $r->nama_lengkap }}</td>
+                    <?php
+                        $jml_hadir = 0;
+                        $jml_izin = 0;
+                        $jml_sakit = 0;
+                        $jml_tidakhadir = 0;
+                        for($i = 1; $i <= $jmlhari; $i++){
+                            $tgl = 'tgl_' . $i;
+                            $datapresensi = explode("|", $r->$tgl);
+                            if ($r->$tgl != NULL) {
+                                $status = $datapresensi[2];
+                            }else{
+                                $status = "";
+                            }
+
+                            if ($status == "h") {
+                                $jml_hadir += 1;
+                            }
+                            if ($status == "i") {
+                                $jml_izin += 1;
+                            }
+                            if ($status == "s") {
+                                $jml_sakit += 1;
+                            }
+                            if (empty($status)) {
+                                $jml_tidakhadir += 1;
+                            }
                     ?>
-                <td>
-                    <span>
-                        {{ isset($hadir[0]) ? $hadir[0] : '0' }}<br>
-                    </span>
-                    <!-- <span style="color: {{ $hadir[0] == "Pagi" && $hadir[1] > "08:00:00" ? "red" : ""}}">
-                        {{ isset($hadir[1]) ? $hadir[1] : '1' }}<br>
-                    </span> -->
-                    <span style="color: {{ ($hadir[0] == "Pagi" && $hadir[1] > "08:00:00") || ($hadir[0] == "Siang" && $hadir[1] > "14:00:00") || ($hadir[0] == "Siang" && $hadir[1] > "14:00:00") ? "red" : ""}}">
-                        {{ isset($hadir[1]) ? $hadir[1] : '1' }}<br>
-                    </span>
-                    <span>
-                        {{ isset($hadir[2]) ? $hadir[2] : '2' }}<br>
-                    </span>
-                </td>
-                <?php
-                    }
-                ?>
-                <td>{{ $totalhadir }}</td>
-                <td>{{ $totalterlambat }}</td>
+                    <td>
+                        {{$status}}
+                    </td>
+                    <?php      
+                        }
+                    ?>
+                    <td>{{ !empty($jml_hadir) ? $jml_hadir : "" }}</td>
+                    <td>{{ !empty($jml_izin) ? $jml_izin : "" }}</td>
+                    <td>{{ !empty($jml_sakit) ? $jml_sakit : "" }}</td>
+                    <td>{{ !empty($jml_tidakhadir) ? $jml_tidakhadir : "" }}</td>
             </tr>
         @endforeach
     </table>

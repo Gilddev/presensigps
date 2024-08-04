@@ -37,10 +37,10 @@
                                     <thead>
                                         <tr>
                                             <th>No.</th>
-                                            <th>NIK</th>
-                                            <th>Name Karyawan</t>
+                                            <!-- <th>NIK</th> -->
+                                            <th>Nama Karyawan</t>
                                             <th>Ruangan</th>
-                                            <th>Dinas</th>
+                                            <th>Jadwal</th>
                                             <th>Jam Masuk</th>
                                             <th>Foto</th>
                                             <th>Jam Pulang</th>

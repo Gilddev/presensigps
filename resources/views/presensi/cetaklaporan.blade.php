@@ -65,51 +65,23 @@
 <!-- Set also "landscape" if you need -->
 <body class="legal">
 
-        <?php
-        function selisihpagi($jadwal_jam_masuk, $jam_kedatangan)
-        {
-            list($h, $m, $s) = explode(":", $jadwal_jam_masuk);
-            $dtAwal = mktime($h, $m, $s, "1", "1", "1");
-            list($h, $m, $s) = explode(":", $jam_kedatangan);
-            $dtAkhir = mktime($h, $m, $s, "1", "1", "1");
-            $dtSelisih = $dtAkhir - $dtAwal;
-            $totalmenit = $dtSelisih / 60;
-            $jam = explode(".", $totalmenit / 60);
-            $sisamenit = ($totalmenit / 60) - $jam[0];
-            $sisamenit2 = $sisamenit * 60;
-            $jml_jam = $jam[0];
-            return $jml_jam . ":" . round($sisamenit2);
-        }
+@php
+function selisih($jadwal_jam_masuk, $jam_kedatangan)
+{
+    list($h, $m, $s) = explode(":", $jadwal_jam_masuk);
+    $dtAwal = mktime($h, $m, $s, "1", "1", "1");
+    list($h, $m, $s) = explode(":", $jam_kedatangan);
+    $dtAkhir = mktime($h, $m, $s, "1", "1", "1");
+    $dtSelisih = $dtAkhir - $dtAwal;
+    $totalmenit = $dtSelisih / 60;
+    $jam = explode(".", $totalmenit / 60);
+    $sisamenit = ($totalmenit / 60) - $jam[0];
+    $sisamenit2 = $sisamenit * 60;
+    $jml_jam = $jam[0];
+    return $jml_jam . ":" . round($sisamenit2);
+}
+@endphp
 
-        function selisihsiang($jadwal_jam_masuk, $jam_kedatangan)
-        {
-            list($h, $m, $s) = explode(":", $jadwal_jam_masuk);
-            $dtAwal = mktime($h, $m, $s, "1", "1", "1");
-            list($h, $m, $s) = explode(":", $jam_kedatangan);
-            $dtAkhir = mktime($h, $m, $s, "1", "1", "1");
-            $dtSelisih = $dtAkhir - $dtAwal;
-            $totalmenit = $dtSelisih / 60;
-            $jam = explode(".", $totalmenit / 60);
-            $sisamenit = ($totalmenit / 60) - $jam[0];
-            $sisamenit2 = $sisamenit * 60;
-            $jml_jam = $jam[0];
-            return $jml_jam . ":" . round($sisamenit2);
-        }
-        function selisihmalam($jadwal_jam_masuk, $jam_kedatangan)
-        {
-            list($h, $m, $s) = explode(":", $jadwal_jam_masuk);
-            $dtAwal = mktime($h, $m, $s, "1", "1", "1");
-            list($h, $m, $s) = explode(":", $jam_kedatangan);
-            $dtAkhir = mktime($h, $m, $s, "1", "1", "1");
-            $dtSelisih = $dtAkhir - $dtAwal;
-            $totalmenit = $dtSelisih / 60;
-            $jam = explode(".", $totalmenit / 60);
-            $sisamenit = ($totalmenit / 60) - $jam[0];
-            $sisamenit2 = $sisamenit * 60;
-            $jml_jam = $jam[0];
-            return $jml_jam . ":" . round($sisamenit2);
-        }
-        ?>
 
   <!-- Each sheet element should have the class "sheet" -->
   <!-- "padding-**mm" is optional: you can set 10, 15, 20 or 25 -->
@@ -166,7 +138,6 @@
             <tr>
                 <th>No</th>
                 <th>Tanggal</th>
-                <th>Dinas</th>
                 <th>Jam Masuk</th>
                 <th>Foto</th>
                 <th>Jam Pulang</th>
@@ -178,14 +149,11 @@
                     @php
                     $path_foto_in = Storage::url('upload/absensi/' . $d -> foto_in);
                     $path_foto_out = Storage::url('upload/absensi/' . $d -> foto_out);
-                    $jam_terlambat_pagi = selisihpagi('08:00:00', $d -> jam_in);
-                    $jam_terlambat_siang = selisihsiang('14:00:00', $d -> jam_in);
-                    $jam_terlambat_malam = selisihmalam('20:00:00', $d -> jam_in);
+                    $jam_terlambat = selisih($d->jam_masuk, $d -> jam_in);
                     @endphp
                     <tr>
                         <td>{{ $loop -> iteration }}</td>
                         <td>{{ date("d-m-Y", strtotime($d -> tgl_presensi)) }}</td>
-                        <td>{{ $d -> dinas }}</td>
                         <td>{{ $d -> jam_in }}</td>
                         <td><img src="{{ url($path_foto_in) }}" class="foto" alt=""></td>
                         <td>{{ $d -> jam_out != null ? $d -> jam_out : 'Belum Absen' }}</td>
@@ -197,31 +165,17 @@
                             @endif
                         </td>
                         <td>
-                            @if ($d -> dinas == 'Pagi' && $d -> jam_in > '08:00:00')
-                                Terlambat {{ $jam_terlambat_pagi }}
-                            @elseif ($d -> dinas == 'Siang' && $d -> jam_in > '13:00:00')
-                                Terlambat {{ $jam_terlambat_siang }}
-                            @elseif ($d -> dinas == 'Malam' && $d -> jam_in > '20:00:00')
-                                Terlambat {{ $jam_terlambat_malam }}
+                            @if ($d -> jam_in > $d->jam_masuk)
+                                Terlambat {{ $jam_terlambat }}
                             @else
                                 Tepat Waktu
                             @endif
                         </td>
                         <td>
                             @if ($d -> jam_out != null)
-                                @if ($d -> dinas == "Pagi")
-                                    @php
-                                        $jmljamkerja = selisihpagi($d -> jam_in, $d -> jam_out);
-                                    @endphp
-                                @elseif ($d -> dinas == "Siang")
-                                    @php
-                                        $jmljamkerja = selisihsiang($d -> jam_in, $d -> jam_out);
-                                    @endphp
-                                @elseif ($d -> dinas == "Malam")
-                                    @php
-                                        $jmljamkerja = selisihmalam($d -> jam_in, $d -> jam_out);
-                                    @endphp
-                                @endif
+                                @php
+                                    $jmljamkerja = selisih($d -> jam_in, $d -> jam_out);
+                                @endphp
                             @else
                                 @php
                                     $jmljamkerja = 0;

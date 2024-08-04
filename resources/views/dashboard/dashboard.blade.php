@@ -184,7 +184,7 @@
                 </div>
             </div>
 
-            <div id=""rekappresensi>
+            <div id="rekappresensi">
                 <h3>Rekap Presensi Bulan {{$namabulan[(int)$bulanini]}} {{$tahunini}}</h3>
                 <div class="row">
                     <div class="col-3">
@@ -255,7 +255,7 @@
                 </div>
                 <div class="tab-content mt-2" style="margin-bottom:100px;">
                     <div class="tab-pane fade show active" id="home" role="tabpanel">
-                        <ul class="listview image-listview">
+                        <!-- <ul class="listview image-listview">
                             @foreach ($historibulanini as $d)
                             @php
                                 $path =  Storage::url('upload/absensi/' . $d -> foto_in);
@@ -267,14 +267,99 @@
                                     </div>
                                     <div class="in">
                                         <div>{{date("d-m-Y", strtotime($d -> tgl_presensi))}}</div>
-                                        <span class="badge badge-warning">{{ $d -> dinas }}</span>
+                                        
                                         <span class="badge badge-success">{{ $d -> jam_in}}</span>
                                         <span class="badge badge-danger">{{$d->jam_out != null ? $d-> jam_out : 'Belum Absen'}}</span>
                                     </div>
                                 </div>
                             </li>
                             @endforeach
-                        </ul>
+                        </ul> -->
+
+                        <style>
+                            .historicontent{
+                                display: flex;
+                            }
+                            .datapresensi h3,
+                            .datapresensi p{
+                                margin-left: 10px;
+                                margin-bottom: 1px; /* Atur jarak sesuai keinginan Anda */
+                            }
+                        </style>
+
+                        @foreach ($historibulanini as $d)
+                        @if ($d->status == "h")
+                            <div class="card" style="margin-bottom: 5px">
+                                <div class="card-body">
+                                    <div class="historicontent">
+                                        <div class="iconpresensi">
+                                            <ion-icon name="finger-print-outline" style="font-size: 48px;" class="text-success"></ion-icon>
+                                        </div>
+                                        <div class="datapresensi">
+                                            <h3>{{ $d->nama_jam_kerja }}</h3>
+                                            <p>{{ date("d-m-Y", strtotime($d->tgl_presensi)) }}</p>
+                                            <p>
+                                                {!! $d->jam_in != null ? date("H:i", strtotime($d->jam_in)) : '<span class="text-danger">Belum Absen Masuk</span>' !!} - 
+                                                {!! $d->jam_out != null ? date("H:i", strtotime($d->jam_out)) : '<span class="text-danger">Belum Absen Pulang</span>' !!} 
+                                            </p>
+                                            <div id="keterangan">
+                                                @php
+                                                    // jam ketika karyawan absen
+                                                    $jam_in = date("H:i", strtotime($d->jam_in));
+
+                                                    // jam jadwal masuk 
+                                                    $jam_masuk = date("H:i", strtotime($d->jam_masuk));
+
+                                                    $jadwal_jam_masuk = $d->tgl_presensi . " " . $jam_masuk;
+                                                    $jam_presesi = $d->tgl_presensi . " " . $jam_in;
+                                                @endphp
+
+                                                @if ($jam_in > $jam_masuk)
+                                                @php
+                                                    $jml_jam_terlambat = hitungjamterlambat($jadwal_jam_masuk, $jam_presesi)
+                                                @endphp
+                                                    <p class="danger">Terlambat {{ $jml_jam_terlambat }}</p>
+                                                @else
+                                                    <p style="color:green">Tepat Waktu</p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @elseif ($d->status == "i")
+                            <div class="card" style="margin-bottom: 5px">
+                                <div class="card-body">
+                                    <div class="historicontent">
+                                        <div class="iconpresensi">
+                                            <ion-icon name="airplane-outline" style="font-size: 48px;" class="text-success"></ion-icon>
+                                        </div>
+                                        <div class="datapresensi">
+                                            <h3>IZIN</h3>
+                                            <p>{{ date("d-m-Y", strtotime($d->tgl_presensi)) }} ({{$d->kode_izin}})</p>
+                                            <p>{{ $d->keterangan }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>        
+                        @elseif ($d->status == "s")
+                            <div class="card" style="margin-bottom: 5px">
+                                <div class="card-body">
+                                    <div class="historicontent">
+                                        <div class="iconpresensi">
+                                            <ion-icon name="medkit-outline" style="font-size: 48px;" class="text-success"></ion-icon>
+                                        </div>
+                                        <div class="datapresensi">
+                                            <h3>SAKIT</h3>
+                                            <p>{{ date("d-m-Y", strtotime($d->tgl_presensi)) }} ({{$d->kode_izin}})</p>
+                                            <p>{{ $d->keterangan }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>        
+                        @endif
+                        @endforeach
+
                     </div>
                     <div class="tab-pane fade" id="profile" role="tabpanel">
                         <ul class="listview image-listview">

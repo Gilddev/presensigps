@@ -6,7 +6,10 @@ use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\RuanganController;
 use App\Http\Controllers\KonfigurasiController;
+use App\Http\Controllers\IzinabsenController;
+use App\Http\Controllers\IzinsakitController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Routing\AbstractRouteCollection;
 
 route::middleware(['guest:karyawan'])->group(function(){
     route::get('/', function(){
@@ -43,6 +46,22 @@ route::middleware(['auth:karyawan'])->group(function(){
     Route::get('/presensi/buatizin', [PresensiController::class,'buatizin']);
     Route::post('/presensi/storeizin', [PresensiController::class,'storeizin']);
     Route::post('/presensi/cekpengajuanizin', [PresensiController::Class, 'cekpengajuanizin']);
+
+    //izin absen
+    Route::get('/izinabsen', [IzinabsenController::class, 'create']);
+    Route::post('/izinabsen/store', [IzinabsenController::class, 'store']);
+    Route::get('/izinabsen/{kode_izin}/edit', [IzinabsenController::class, 'edit']);
+    Route::post('/izinabsen/{kode_izin}/update', [IzinabsenController::class, 'update']);
+
+    //izin sakit
+    Route::get('/izinsakit', [IzinsakitController::class, 'create']);
+    Route::post('/izinsakit/store', [IzinsakitController::class, 'store']);
+    Route::get('/izinsakit/{kode_izin}/edit', [IzinsakitController::class, 'edit']);
+    Route::post('/izinsakit/{kode_izin}/update', [IzinsakitController::class, 'update']);
+
+    //edit pengajuan izin
+    Route::get('/izin/{kode_izin}/showact', [PresensiController::class, 'showact']);
+    Route::get('/izin/{kode_izin}/delete', [PresensiController::class, 'deleteizin']);
 });
 
 Route::middleware(['auth:user']) -> group(function(){
@@ -73,9 +92,19 @@ Route::middleware(['auth:user']) -> group(function(){
     Route::post('/presensi/cetakrekap', [PresensiController::class, 'cetakrekap']);
     Route::get('/presensi/izinsakit', [PresensiController::Class, 'izinsakit']);
     Route::post('/presensi/approveizinsakit', [PresensiController::Class, 'approveizinsakit']);
-    Route::get('/presensi/{id}/batalkanizinsakit', [PresensiController::Class, 'batalkanizinsakit']);
+    Route::get('/presensi/{kode_izin}/batalkanizinsakit', [PresensiController::Class, 'batalkanizinsakit']);
 
     //konfigurasi
     Route::get('/konfigurasi/lokasikantor', [KonfigurasiController::Class, 'lokasikantor']);
     Route::post('/konfigurasi/updatelokasikantor', [KonfigurasiController::Class, 'updatelokasikantor']);
+    
+    //konfigurasi jam kerja
+    Route::get('/konfigurasi/jamkerja', [KonfigurasiController::Class, 'jamkerja']);
+    Route::post('/konfigurasi/storejamkerja', [KonfigurasiController::Class, 'storejamkerja']);
+    Route::post('/konfigurasi/editjamkerja', [KonfigurasiController::Class, 'editjamkerja']);
+    Route::post('/konfigurasi/updatejamkerja', [KonfigurasiController::Class, 'updatejamkerja']);
+    Route::post('/konfigurasi/{kode_jam_kerja}/delete', [KonfigurasiController::Class, 'deletejamkerja']);
+    Route::get('/konfigurasi/{nik}/setjamkerja', [KonfigurasiController::Class, 'setjamkerja']);
+    Route::post('/konfigurasi/storesetjamkerja', [KonfigurasiController::Class, 'storesetjamkerja']);
+    Route::post('/konfigurasi/updatesetjamkerja', [KonfigurasiController::Class, 'updatesetjamkerja']);
 });

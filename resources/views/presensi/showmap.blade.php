@@ -1,7 +1,14 @@
 <style>
     #map { height: 320px; }
-    #fotoin { height: 320px; }
-    #fotoout { height: 320px; }
+    #fotoin { 
+        height: 100%;
+        object-fit: cover; 
+    }
+    #fotoout { 
+        height: 100%; 
+        width: 100%;
+        object-fit: cover;
+    }
 </style>
 
 @php

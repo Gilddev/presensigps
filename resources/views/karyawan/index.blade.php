@@ -119,10 +119,16 @@
                                             <td>
                                                 <div class="btn-group">
                                                 <!-- <a href="#" class="edit btn btn-info btn-sm" nik="{{ $d -> nik }}"> -->
+
                                                 <a href="#" class="edit" nik="{{ $d -> nik }}">
                                                     <svg xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-edit"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
                                                 </a>
-                                                <form action="/karyawan/{{ $d -> nik }}/delete" method="POST" style="margin-left: 10px">
+
+                                                <a href="/konfigurasi/{{ $d->nik }}/setjamkerja" class="" style="margin-left: 5px">
+                                                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-settings"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></svg>
+                                                </a>
+
+                                                <form action="/karyawan/{{ $d -> nik }}/delete" method="POST" style="margin-left: 5px">
                                                     @csrf
                                                     <!-- <a class="btn btn-danger btn-sm delete-confirm"> -->
                                                     <a href="#" class="delete-confirm">
@@ -164,7 +170,7 @@
                                   <!-- Download SVG icon from http://tabler-icons.io/i/user -->
                                   <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-id"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 4m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v10a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z" /><path d="M9 10m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M15 8l2 0" /><path d="M15 12l2 0" /><path d="M7 16l10 0" /></svg>
                             </span>
-                            <input type="text" value="" id="nik" class="form-control" placeholder="Nik" name="nik">
+                            <input type="text" value="" id="nik" class="form-control" placeholder="Nik" name="nik" maxlength="16">
                         </div>
                     </div>
                 </div>
@@ -289,6 +295,8 @@
 @push('myscript')
 <script>
     $(function(){
+
+        $("#nik").mask("0000000000000000");
         $("#btn_tambahkaryawan").click(function(){
             $("#modal-inputkaryawan").modal("show");
         });

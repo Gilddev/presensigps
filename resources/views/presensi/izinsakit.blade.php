@@ -16,7 +16,23 @@
 
 <div class="page-body">
     <div class="container-xl">
-
+        
+        <div class="row">
+            <div class="col-12">
+                @if (Session::get('success'))
+                    <div class="alert alert-success">
+                        {{ Session::get('success') }}
+                    </div>
+                @endif
+        
+                @if (Session::get('warning'))
+                    <div class="alert alert-warning">
+                        {{ Session::get('warning') }}
+                    </div>
+                @endif
+            </div>
+        </div>
+    
         <div class="row">
             <div class="col-12">
                 <form action="/presensi/izinsakit" method="GET" autocomplete="off">
@@ -93,8 +109,9 @@
                 <thead>
                     <tr>
                         <th>No.</th>
-                        <th>Tanggal</th>
-                        <th>Nik</th>
+                        <th>Kode Izin</th>
+                        <th>Tanggal Izin</th>
+                        <!-- <th>Nik</th> -->
                         <th>Nama Karyawan</th>
                         <th>Ruangan</th>
                         <th>Status</th>
@@ -107,8 +124,9 @@
                     @foreach ($izinsakit as $d)
                         <tr>
                             <td>{{ $loop -> iteration }}</td>
-                            <td>{{ date('d-m-Y', strtotime($d -> tgl_izin)) }}</td>
-                            <td>{{ $d -> nik }}</td>
+                            <td>{{ $d -> kode_izin }}</td>
+                            <td>{{ date('d-m-Y', strtotime($d -> tgl_izin_dari)) }} s/d {{ date('d-m-Y', strtotime($d -> tgl_izin_sampai)) }}</td>
+                            <!-- <td>{{ $d -> nik }}</td> -->
                             <td>{{ $d -> nama_lengkap }}</td>
                             <td>{{ $d -> kode_ruangan }}</td>
                             <td>{{ $d -> status == "i" ? "Izin" : "Sakit" }}</td>
@@ -124,12 +142,12 @@
                             </td>
                             <td>
                                 @if ($d -> status_approved == 0)
-                                    <a href="#" class="btn btn-sm btn-primary" id="approve" id_izinsakit="{{ $d -> id }}">
+                                    <a href="#" class="btn btn-sm btn-primary approve" kode_izin="{{ $d -> kode_izin }}">
                                         <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-external-link"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg>
                                         Konfirmasi
                                     </a>
                                 @else
-                                    <a href="/presensi/{{ $d -> id }}/batalkanizinsakit" class="btn btn-sm btn-danger">
+                                    <a href="/presensi/{{ $d -> kode_izin }}/batalkanizinsakit" class="btn btn-sm btn-danger">
                                         <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-cancel"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M18.364 5.636l-12.728 12.728" /></svg>
                                         Batalkan
                                     </a>
@@ -153,9 +171,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="/presensi/approveizinsakit/" method="POST">
+                <form action="/presensi/approveizinsakit" method="POST">
                     @csrf
-                    <input type="hidden" id="id_izinsakit_form" name="id_izinsakit_form">
+                    <input type="hidden" id="kode_izin_form" name="kode_izin_form">
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
@@ -187,10 +205,10 @@
 @push('myscript')
 <script>
     $(function(){
-        $("#approve").click(function(e){
+        $(".approve").click(function(e){
             e.preventDefault();
-            var id_izinsakit = $(this).attr("id_izinsakit");
-            $("#id_izinsakit_form").val(id_izinsakit);
+            var kode_izin = $(this).attr("kode_izin");
+            $("#kode_izin_form").val(kode_izin);
             //alert(id_izinsakit);
             $("#modal-izinsakit").modal("show");
         });
